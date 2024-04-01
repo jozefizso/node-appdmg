@@ -21,10 +21,18 @@ jobs:
     - name: checkout
       uses: actions/checkout@v4
 
+    - name: setup python v3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11' 
+
     - name: setup node v${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
+
+    - name: setup npm v8
+      run: npm install --global npm@8
 
     - name: npm ci
       run: npm ci

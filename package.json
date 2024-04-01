@@ -19,7 +19,8 @@
     "repeat-string": "^1.5.4"
   },
   "engines": {
-    "node": ">=8.5"
+    "node": ">= 12",
+    "npm": ">= 8"
   },
   "os": [
     "darwin"
