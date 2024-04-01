@@ -1,0 +1,45 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        macos: [ 'macos-11', 'macos-12' ]
+        node-version: [ 12, 14, 16 ]
+
+    runs-on: ${{ matrix.macos }}
+
+    continue-on-error: true
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+
+    - name: setup node v${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: npm ci
+      run: npm ci
+
+    - name: npm test
+      run: npm test
+
+    - name: npm audit
+      run: npm audit
+
+    - name: npm audit report
+      run: npm audit --json > npm-audit-report.json
+
+    - name: upload audit report
+      uses: actions/upload-artifact@v4
+      with:
+        name: npm-audit-report-node-${{ matrix.node-version }}-${{ matrix.macos }}
+        path: npm-audit-report.json
