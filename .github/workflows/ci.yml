@@ -39,6 +39,12 @@ jobs:
       run: npm test
       continue-on-error: true
 
+    - name: upload capture
+      uses: actions/upload-artifact@v4
+      with:
+        name: capture-${{ matrix.node-version }}-${{ matrix.macos }}
+        path: capture.png
+
     - name: npm audit
       run: npm audit
       continue-on-error: true

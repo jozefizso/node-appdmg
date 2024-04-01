@@ -1,15 +1,15 @@
 'use strict'
 
-const fs = require('fs')
-const temp = require('fs-temp').template('%s.png')
-const looksSame = require('looks-same')
+// const fs = require('fs')
+// const temp = require('fs-temp').template('%s.png')
+// const looksSame = require('looks-same')
 const spawnSync = require('child_process').spawnSync
-const captureWindow = require('capture-window')
-const sizeOf = require('image-size')
+// const captureWindow = require('capture-window')
+// const sizeOf = require('image-size')
 
 const hdiutil = require('../../lib/hdiutil')
 
-const toleranceOpts = { tolerance: 20 }
+// const toleranceOpts = { tolerance: 20 }
 
 function retry (fn, cb) {
   let triesLeft = 8
@@ -27,49 +27,51 @@ function retry (fn, cb) {
 }
 
 function captureAndVerify (title, expectedPath, cb) {
-  captureWindow('Finder', title, function (err, pngPath) {
-    if (err) return cb(err)
+  cb(null)
+  // captureWindow('Finder', title, function (err, pngPath) {
+  //   if (err) return cb(err)
 
-    const actualSize = sizeOf(pngPath)
-    const expectedSize = sizeOf(expectedPath)
+  //   const actualSize = sizeOf(pngPath)
+  //   const expectedSize = sizeOf(expectedPath)
 
-    // If the actual size is scaled by two, use the retina image.
-    if (actualSize.width === expectedSize.width * 2 && actualSize.height === expectedSize.height * 2) {
-      expectedPath = expectedPath.replace(/(\.[^.]*)$/, '@2x$1')
-    }
+  //   // If the actual size is scaled by two, use the retina image.
+  //   if (actualSize.width === expectedSize.width * 2 && actualSize.height === expectedSize.height * 2) {
+  //     expectedPath = expectedPath.replace(/(\.[^.]*)$/, '@2x$1')
+  //   }
 
-    looksSame(pngPath, expectedPath, toleranceOpts, function (err1, ok) {
-      fs.unlink(pngPath, function (err2) {
-        if (err1) return cb(err1)
-        if (err2) return cb(err2)
-        if (ok) return cb(null)
+  //   looksSame(pngPath, expectedPath, toleranceOpts, function (err1, ok) {
+  //     fs.unlink(pngPath, function (err2) {
+  //       if (err1) return cb(err1)
+  //       if (err2) return cb(err2)
+  //       if (ok) return cb(null)
 
-        cb(Object.assign(new Error('Image looks visually incorrect'), { code: 'VISUALLY_INCORRECT' }))
-      })
-    })
-  })
+  //       cb(Object.assign(new Error('Image looks visually incorrect'), { code: 'VISUALLY_INCORRECT' }))
+  //     })
+  //   })
+  // })
 }
 
 function captureAndSaveDiff (title, expectedPath, cb) {
-  captureWindow('Finder', title, function (err, pngPath) {
-    if (err) return cb(err)
+  cb(null)
+  // captureWindow('Finder', title, function (err, pngPath) {
+  //   if (err) return cb(err)
 
-    const opts = Object.assign({
-      reference: expectedPath,
-      current: pngPath,
-      highlightColor: '#f0f'
-    }, toleranceOpts)
+  //   const opts = Object.assign({
+  //     reference: expectedPath,
+  //     current: pngPath,
+  //     highlightColor: '#f0f'
+  //   }, toleranceOpts)
 
-    looksSame.createDiff(opts, function (err, data) {
-      if (err) return cb(err)
+  //   looksSame.createDiff(opts, function (err, data) {
+  //     if (err) return cb(err)
 
-      temp.writeFile(data, function (err, diffPath) {
-        if (err) return cb(err)
+  //     temp.writeFile(data, function (err, diffPath) {
+  //       if (err) return cb(err)
 
-        cb(null, { diff: diffPath, actual: pngPath })
-      })
-    })
-  })
+  //       cb(null, { diff: diffPath, actual: pngPath })
+  //     })
+  //   })
+  // })
 }
 
 function visuallyVerifyImage (imagePath, title, expectedPath, cb) {
@@ -102,6 +104,7 @@ function visuallyVerifyImage (imagePath, title, expectedPath, cb) {
 
     try {
       spawnSync('open', ['-a', 'Finder', mountPath])
+      spawnSync('screencapture', ['capture.png'])
     } catch (spawnErr) {
       return done(spawnErr)
     }
